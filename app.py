@@ -1,13 +1,25 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, session
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
+
 
 app = Flask(__name__)
 app.secret_key = "dev_secret_for_demo"
+
+"""
+limiter = Limiter(
+    key_func=get_remote_address,
+    default_limits=["200 per day", "50 per hour", "10 per minute"],
+)
+limiter.init_app(app)
+"""
 
 # Armazenamento simples em memória para demonstração
 users = {"student@example.com": {"password": "password123", "name": "Aluno Exemplo"}}
 
 
 @app.route("/")
+# @limiter.limit("5 per minute")
 def index():
     return redirect(url_for("login"))
 
